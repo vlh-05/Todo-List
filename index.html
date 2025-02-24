@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center" style="color: #a27aff;">Todo List</h1>
+        
+        <div class="input-group mb-3">
+            <input type="text" id="taskInput" class="form-control" placeholder="Enter a task"
+                   oninput="updateCharacterCount()" maxlength="20">
+            
+            <span class='character-count' id='charCount'>20</span>
+    
+            <div class='input-group-append'>
+                <button class='btn btn-primary' onclick='addTask()'>Add Task</button>
+            </div>
+        </div>
+    
+        <ul id='taskList' class='list-group'></ul>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("img.jpg"); /* Replace 'img.jpg' with the path to your image */
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 800px; /* Increased width */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border-radius: 10px;
+            box-shadow: 0px 10px rgba(0,0,0,0.1);
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            align-items: flex-start; /* Align items to the start */
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .delete-button {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .finish-button {
+            color: green;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .status-dropdown {
+            width: 150px;
+            text-align: right;
+            margin-left: 10px; /* Added margin */
+            flex-shrink: 0;
+            position: relative;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 100px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown:hover .dropdown-toggle {
+            background-color: #c7d4db;
+        }
+        .dropdown-toggle {
+            background-color: #e9ecef;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .dropdown-toggle:focus {
+            outline: none;
+        }
+        .task-text {
+            flex-grow: 1;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center" style="color: #a27aff;">Todo List</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="taskInput" class="form-control" placeholder="Enter a task" onkeypress="handleKeyPress(event)">
+            <div class="input-group-append">
+                <button class="btn" style="background-color: #FFDAB9; color: #a27aff; outline: none !important;" onclick="addTask()">Add Task</button>
+            </div>
+        </div>
+        <ul id="taskList" class="task-list"></ul>
+    </div>
+
+    <script>
+        let tasks = [];
+
+        function addTask() {
+            const taskInput = document.getElementById("taskInput");
+            const taskText = taskInput.value.trim();
+            if (taskText === "") {
+                return; // If task text is empty, do not save
+            }
+
+            const task = {
+                id: Date.now().toString(),
+                text: taskText,
+                status: null // Initially set status to null
+            };
+
+            tasks.push(task);
+            renderTasks();
+            taskInput.value = "";
+        }
+
+        function deleteTask(taskId) {
+            tasks = tasks.filter(task => task.id !== taskId);
+            renderTasks();
+        }
+
+        function finishTask(taskId) {
+            const task = tasks.find(task => task.id === taskId);
+            if (task) {
+                task.status = "Completed";
+                renderTasks();
+            }
+        }
+
+        function updateTaskStatus(taskId, status) {
+            const task = tasks.find(task => task.id === taskId);
+            if (task && task.status !== 'Completed') {
+                task.status = status;
+                renderTasks();
+            }
+        }
+
+        function renderTasks() {
+            const taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+
+            tasks.forEach(task => {
+                const li = document.createElement("li");
+                li.className = "task-item";
+                li.innerHTML = `
+                    <div class="task-text">${task.text}</div>
+                    <div class="dropdown mr-3">
+                        <button class="dropdown-toggle status-dropdown" onclick="toggleDropdown(this)" data-taskid="${task.id}" ${task.status === 'Completed' ? 'disabled' : ''}>
+                            ${task.status ? task.status : 'Status'}
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu${task.id}">
+                            <a href="#" onclick="updateTaskStatus('${task.id}', 'Pending')">Pending</a>
+                            <a href="#" onclick="updateTaskStatus('${task.id}', 'In Progress')">In Progress</a>
+                            <a href="#" onclick="updateTaskStatus('${task.id}', 'Completed')">Completed</a>
+                        </div>
+                    </div>
+                    <button class="delete-button" onclick="deleteTask('${task.id}')">Delete</button>
+                    <button class="finish-button" onclick="finishTask('${task.id}')">Finish</button>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) { // Check if Enter key is pressed
+                addTask();
+            }
+        }
+
+        function toggleDropdown(button) {
+            const dropdownId = button.getAttribute('data-taskid');
+            const dropdownMenu = document.getElementById('dropdownMenu' + dropdownId);
+            dropdownMenu.classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.status-dropdown')) {
+                const dropdowns = document.getElementsByClassName('dropdown-menu');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html> -->
